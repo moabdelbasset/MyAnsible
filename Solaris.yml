@@ -5,3 +5,11 @@
     become: true
     become_user: root
     shell: "explorer -w default,localzones,smfextended"
+  - name: Installing the compliance package
+    become: true
+    become_user: root
+    shell: "pkg install security/compliance"    
+  - name: Running the compliance assessment report on iodomain
+    become: true
+    become_user: root
+    shell: "compliance assess -b pci-dss -p Solaris_PCI-DSS -a pci-dss"
