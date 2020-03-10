@@ -1,7 +1,7 @@
 ---
-- hosts: solaris
+- hosts: iodomains
   tasks:
-  - name: Execute a command using the shell module
+  - name: Running explorer command on iodomains
     become: true
     become_user: root
-    shell: explorer
+    shell: "explorer -w default,localzones,smfextended"
