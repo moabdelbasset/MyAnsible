@@ -1,0 +1,30 @@
+- hosts: iodomains
+  vars_files:
+    - passwordfile
+  tasks:
+  - name: Copy explorer defaults to hosts
+    become: true
+    become_user: root
+    copy:
+      src: /root/explorer
+      dest: /root/explorer
+      owner: root
+      group: staff
+      mode: '0600'
+  - name: Modify the explorer file with correct hostid
+#    shell: echo lol
+    shell: "sed -e 's/84f89a61/'`hostid`'/g' /root/explorer > /etc/explorer/default/explorer"	  
+  - name: Generate Explorer
+#    shell: echo lol
+    shell: "explorer -w default,localzones,smfextended"
+  - name: Get the path to the explorer on remote because ansible doesn't accept wildcards
+    find:
+      paths: /var/explorer/output/
+      patterns: "*.gz"
+    register: explorer_file
+  - name: Get the Explorer from remote
+    fetch:
+      src: "{{ item.path }}"
+      dest: /root/drop/{{ inventory_hostname }}/
+      flat: yes
+    with_items: "{{ explorer_file.files }}"
